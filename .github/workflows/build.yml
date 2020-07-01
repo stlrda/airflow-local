@@ -4,11 +4,11 @@ jobs:
 	build:
 		runs-on: ubuntu-latest
 		steps:
-			- uses: actions/checkout@master
-			- name: Publish to Github Packages
-			  uses: elgohr/Publish-Docker-Github-Action@master
-			  with:
-				name: stlrda/airflow-local/airflow-local
-				username: ${{ github.actor }}
-				password: ${{ secrets.TOKEN }}
-				registry: docker.pkg.github.com
+		- uses: actions/checkout@master
+		- name: Publish to Github Packages
+		uses: elgohr/Publish-Docker-Github-Action@master
+		with:
+			name: stlrda/airflow-local/airflow-local
+			username: ${{ github.actor }}
+			password: ${{ secrets.TOKEN }}
+			registry: docker.pkg.github.com
