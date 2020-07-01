@@ -1,3 +1,5 @@
+# Derivative of:
+#
 # VERSION 1.10.9
 # AUTHOR: Matthieu "Puckel_" Roisil
 # DESCRIPTION: Basic Airflow container
@@ -28,7 +30,6 @@ ENV LC_MESSAGES en_US.UTF-8
 # Disable noisy "Handling signal" log messages:
 # ENV GUNICORN_CMD_ARGS --log-level WARNING
 
-# Added Sudo to Dependencies
 RUN set -ex \
     && buildDeps=' \
         freetds-dev \
@@ -51,7 +52,6 @@ RUN set -ex \
         rsync \
         netcat \
         locales \
-	sudo \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -79,14 +79,9 @@ COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
-# Add Airflow to the Sudoers #Maybe Don't Need
-RUN usermod -aG sudo airflow
 
-# Remove Password for Root
-USER root
-RUN sudo passwd -dl root
-
-# Maybe Dumb, Install Git and Other System Dependencies
+# Explicitly Install System Dependencies
+# This Should be Modified if New DAGs Require New System Level Dependencies
 RUN apt-get update -yqq && \
 	apt-get install -yqq \
 	git \
