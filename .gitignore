@@ -24,3 +24,7 @@ sftp-config.json
 
 # Python
 __pycache__
+
+# Dont Save DAGs or Logs From a Deployment
+logs/*
+dags/efs/*
