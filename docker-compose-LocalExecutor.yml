@@ -1,6 +1,17 @@
-version: '3.7'
+version: '3.3'
 services:
+    caddy:
+        container_name: caddy-server
+        image: caddy:2.0.0-alpine
+        restart: always
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - ./caddy_data:/data
     postgres:
+        container_name: postgres
         image: postgres:9.6
         environment:
             - POSTGRES_USER=airflow
@@ -11,15 +22,18 @@ services:
                 max-size: 10m
                 max-file: "3"
 
-    webserver:
+    af-webserver:
+        container_name: af-webserver
         image: docker.pkg.github.com/stlrda/airflow-local/airflow-local:latest
         restart: always
         depends_on:
+            - caddy
             - postgres
         environment:
             - LOAD_EX=n
             - EXECUTOR=Local
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+            - FERNET_KEY=z9h4AeivUdyUT1xNjC04E5HpxsdgGw4suCbjY6_AgIs=
         logging:
             options:
                 max-size: 10m
@@ -29,7 +43,7 @@ services:
             - ./logs:/usr/local/airflow/logs
             # - ./plugins:/usr/local/airflow/plugins
         ports:
-            - "8080:8080"
+            - 8080:8080
         command: webserver
         healthcheck:
             test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]

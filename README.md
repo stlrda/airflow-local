@@ -1,6 +1,28 @@
 # airflow-local
 Derivative Development of puckel/docker-airflow for Testing STL RDA DAGs
 
+## Running on a Fresh Instance
+```
+# Clone the Repo
+git clone https://github.com/stlrda/airflow-local && cd airflow-local
+```
+
+To run this docker-compose setup, you will need to modify the `Caddyfile` to your domain. You will also want to change the Fernet Key environmental varibale in the `docker-compose-LocalExecutor.yml` to a secret you control. You can generate one like so:
+```
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+```
+# Start Docker Compose
+docker-compose -f docker-compose-LocalExecutor.yml up -d
+
+# Create a User Account
+docker exec <container_id> airflow create_user -r Admin -u admin -e "email@domain.com" -f Firstname -l Lastname -p password
+```
+
+You should be ready to go from there!
+
+
 
 > Orginal README as Follows:
 

@@ -1,0 +1,7 @@
+{
+    email bransonfox@umsl.edu
+}
+
+airflow.stldata.org {
+    reverse_proxy * af-webserver:8080
+}
