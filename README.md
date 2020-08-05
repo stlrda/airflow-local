@@ -12,6 +12,12 @@ To run this docker-compose setup, you will need to modify the `Caddyfile` to you
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 ```
 
+Since we use a custom image generated through Github packages, you need to authenticate with a Github Token. (At time of writing public packages still require a Github Token)
+```
+echo yourgithubtokenlongalphanumericstring | docker login https://docker.pkg.github.com -u githubusername --password-stdin
+```
+
+
 ```
 # Start Docker Compose
 docker-compose -f docker-compose-LocalExecutor.yml up -d
